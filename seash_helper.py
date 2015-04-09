@@ -43,7 +43,9 @@ geoip_client = dy_import_module("geoip_client.r2py")
 # For loadstate and savestate
 serialize = dy_import_module("serialize.r2py")
 
-nmclient = dy_import_module("nmclient.r2py")
+# Use fastnmclient rather than the Repy implementation
+# (See SeattleTestbed/seash#83)
+import fastnmclient as nmclient
 
 
 
