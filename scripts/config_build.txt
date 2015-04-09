@@ -1,4 +1,13 @@
 ./*
+# Adding `modules` and subdirs manually as we have no `tree` functionality yet.
+./modules/* modules
+./modules/modules/* modules/modules
+./modules/factoids/* modules/factoids
+./modules/geoip/* modules/geoip
+./modules/uploaddir/* modules/uploaddir
+./modules/variables/* modules/variables
+
+
 DEPENDENCIES/repy_v2/*
 DEPENDENCIES/portability/*
 DEPENDENCIES/seattlelib_v2/*
