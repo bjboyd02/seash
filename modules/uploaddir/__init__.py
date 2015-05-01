@@ -83,14 +83,16 @@ your_user_name@browsegood !> uploaddir a_local_directory
     # the OS-specific path separator, and the actual file name. 
     # This is enough for `upload_target` to find the file.
     path_and_filename = source_directory + os.sep + filename
-    print "Uploading '" + path_and_filename + "'..."
-
-    # Construct an input_dict containing command args for seash's 
-    # `upload FILENAME` function.
-    # XXX There might be a cleaner way to do this.
-    faked_input_dict = {"upload": {"name": "upload", 
+    if not os.path.isdir(path_and_filename):
+      print "Uploading '" + path_and_filename + "'..."
+      # Construct an input_dict containing command args for seash's 
+      # `upload FILENAME` function.
+      # XXX There might be a cleaner way to do this.
+      faked_input_dict = {"upload": {"name": "upload", 
         "children": {path_and_filename: {"name": "filename"}}}}
-    command_callbacks.upload_filename(faked_input_dict, environment_dict)
+      command_callbacks.upload_filename(faked_input_dict, environment_dict)
+    else:
+      print "Skipping sub-directory '" + filename + "'. You may upload it separately."
 
 
 
