@@ -15,7 +15,7 @@
 
 import seash_global_variables
 import seash_exceptions
-from repyportability import add_dy_support
+from repyportability import *
 add_dy_support(locals())
 geoip_client = dy_import_module("geoip_client.r2py")
 
