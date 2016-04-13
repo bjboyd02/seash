@@ -36,7 +36,7 @@ def simplify_command(input_dict, environment_dict):
   # Check user input and seash state:
   # 1, Make sure there is an active user key.
   if environment_dict["currentkeyname"] is None:
-    raise seash_exceptions.UserError("""Error: Please set an identity before using 'uploaddir'!
+    raise seash_exceptions.UserError("""Error: Please set an identity before using 'execute'!
 Example:
 
  !> loadkeys your_user_name
@@ -46,7 +46,7 @@ your_user_name@ !>
 
   # 2, Make sure there is a target to work on.
   if environment_dict["currenttarget"] is None:
-    raise seash_exceptions.UserError("""Error: Please set a target to work on before using 'uploaddir'!
+    raise seash_exceptions.UserError("""Error: Please set a target to work on before using 'execute'!
 Example
 your_user_name@ !> on browsegood
 your_user_name@browsegood !> 
@@ -71,7 +71,8 @@ your_user_name@browsegood !> execute my_sensor_program.r2py
           "children": {
               commands_list[0]: {"callback": command_callbacks.start_remotefn, 
                   "name": "filename",
-                  "children": {filenames: {"callback": command_callbacks.start_remotefn_arg, "children": {}, "name": "args"}}}}}}
+                  "children": {filenames: {"callback": command_callbacks.start_remotefn_arg, 
+                      "children": {}, "name": "args"}}}}}}
     
   command_callbacks.start_remotefn_arg(faked_input_dict, environment_dict)
 
