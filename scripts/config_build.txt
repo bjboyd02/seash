@@ -6,6 +6,7 @@
 ./modules/geoip/* modules/geoip
 ./modules/uploaddir/* modules/uploaddir
 ./modules/variables/* modules/variables
+./modules/execute/* modules/execute
 
 
 DEPENDENCIES/repy_v2/*
