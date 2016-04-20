@@ -9,7 +9,7 @@ Using this module, you can simplify the `start` command on all of
 the VMs in your current seash target (e.g., browsegood).
 
 Typically to run an experiment (e.g., experiment.r2py) using 
-security layers, we need to
+sensors and blur layers, we need to
 
 user@target !> start dylink.r2py encasementlib.r2py sensor_layer.r2py \
                [any blur layers] experiment.r2py
@@ -24,11 +24,13 @@ commands_list = ["dylink.r2py", "encasementlib.r2py", "sensor_layer.r2py"]
 
 
 def simplify_command(input_dict, environment_dict):
-  """This function simplifies three library files specified in `start`:
-  dylink.r2py, encasementlib.r2py, and sensor_layer.r2py. When a program
-  is run by `execute`, these three files do not need to be specified.
+  """This function simplifies the `start` command for the user 
+  by including three libraries:
+  dylink.r2py, encasementlib.r2py, and sensor_layer.r2py
+  When a program is run by `execute`, these three filenames do not 
+  need to be specified.
 
-  A note on the input_dict argument:
+  A note on the `input_dict` argument:
   `input_dict` contains our own `command_dict` (see below), with 
   the `"[ARGUMENT]"` sub-key of `children` renamed to what 
   argument the user provided. 
@@ -53,26 +55,30 @@ your_user_name@browsegood !>
 """)
 
   try:
-    user_files = input_dict["execute"]["children"].keys()[0]
+    user_files_and_args = input_dict["execute"]["children"].keys()[0]
   except IndexError:
-    # The user didn't specify files to execute. Silly them!!!
+    # The user didn't specify files to execute.
     raise seash_exceptions.UserError("""Error: Missing operand to 'execute'
 Please specify which file(s) I should execute, e.g.
 your_user_name@browsegood !> execute my_sensor_program.r2py
 """)
 
-  filenames = " ".join(commands_list[1:]) + " " + user_files
+  # `commands_list`'s first item is the filename to feed into 
+  # `command_callbacks.start_remotefn`; all other items plus 
+  # the user-specified filenames/args are collected here:
+  filenames_and_args = " ".join(commands_list[1:]) + " " + user_files_and_args
 
   # Construct an input_dict containing command args for seash's 
-  # `upload FILENAME` function.
+  # `start FILENAME [ARGS]` function.
   # XXX There might be a cleaner way to do this.
   faked_input_dict = {
       "start": {"name": "start", 'callback': None,
           "children": {
               commands_list[0]: {"callback": command_callbacks.start_remotefn, 
                   "name": "filename",
-                  "children": {filenames: {"callback": command_callbacks.start_remotefn_arg, 
-                      "children": {}, "name": "args"}}}}}}
+                  "children": {filenames_and_args: {
+                      "callback": command_callbacks.start_remotefn_arg, 
+                          "children": {}, "name": "args"}}}}}}
     
   command_callbacks.start_remotefn_arg(faked_input_dict, environment_dict)
 
@@ -101,7 +107,4 @@ moduledata = {
   'help_text': module_help,
   'url': None,
 }
-
-
-
 
