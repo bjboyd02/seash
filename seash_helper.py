@@ -22,12 +22,6 @@ import time as pythontime
 # Used for error checking during file handling
 import errno
 
-# Enable the use of Affixes
-affix_stack = dy_import_module('affix_stack.r2py')
-affix_obj = affix_stack.AffixStack('(CoordinationAffix)(NamingAndResolverAffix)')
-
-# Override openconnection so that nmclient will use Affixes
-openconnection = affix_obj.openconnection
 
 
 time = dy_import_module("time.r2py")
