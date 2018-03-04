@@ -100,7 +100,7 @@ def local_updatetime(port):
 
   # time.time() gives us the # of seconds since 1970, whereas the NTP
   # services gives us the # of seconds since 1900.
-  time.time_settime(pythontime.time() + time.time_seconds_from_1900_to_1970)
+  time.time_settime(pythontime.time() + 2208988800)
 
 
 
