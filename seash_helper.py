@@ -22,12 +22,6 @@ import time as pythontime
 # Used for error checking during file handling
 import errno
 
-# Enable the use of Affixes
-affix_stack = dy_import_module('affix_stack.r2py')
-affix_obj = affix_stack.AffixStack('(CoordinationAffix)(NamingAndResolverAffix)')
-
-# Override openconnection so that nmclient will use Affixes
-openconnection = affix_obj.openconnection
 
 
 time = dy_import_module("time.r2py")
@@ -106,7 +100,7 @@ def local_updatetime(port):
 
   # time.time() gives us the # of seconds since 1970, whereas the NTP
   # services gives us the # of seconds since 1900.
-  time.time_settime(pythontime.time() + time.time_seconds_from_1900_to_1970)
+  time.time_settime(pythontime.time() + 2208988800)
 
 
 

@@ -62,6 +62,10 @@ import seash_dictionary
 import os
 import sys
 
+import optparse
+
+LOCAL_MODE = False
+
 # Only rename if we're running on OSX
 rename_readline_so_file = sys.platform == 'darwin'
 HIDDEN_READLINE_SO_FN = 'readline.so.mac'
@@ -109,7 +113,20 @@ import traceback
 
 import os.path    # fix path names when doing upload, loadkeys, etc.
 
+def parse_arguments():
+  """
+  """
+  parser = optparse.OptionParser(version="Seash version")
 
+  parser.add_option('--local-mode', dest='local_mode',
+                    action='store_true', default=False,
+                    help="Run Seash in an internet-restricted environment. " +
+                         "Will only connect to nodes on local WiFi.")
+  options, args = parser.parse_args()
+  global LOCAL_MODE
+
+  if options.local_mode:
+    LOCAL_MODE = True
 
 
 def command_loop(test_command_list):
@@ -124,22 +141,39 @@ def command_loop(test_command_list):
   # Contains the local variables of the original command loop.
   # Keeps track of the user's state in seash. Referenced 
   # during command executions by the command_parser.
-  environment_dict = {
-    'host': None, 
-    'port': None, 
-    'expnum': None,
-    'filename': None,
-    'cmdargs': None,
-    'defaulttarget': None,
-    'defaultkeyname': None,
-    'currenttarget': None,
-    'currentkeyname': None,
-    'autosave': False,
-    'handleinfo': {},
-    'showparse': True,
+  if LOCAL_MODE:
+    environment_dict = {
+      'host': None, 
+      'port': None, 
+      'expnum': None,
+      'filename': None,
+      'cmdargs': None,
+      'defaulttarget': None,
+      'defaultkeyname': None,
+      'currenttarget': None,
+      'currentkeyname': None,
+      'autosave': False,
+      'handleinfo': {},
+      'showparse': True,
+      'local_mode' : True,
+      }
+  else:
+    environment_dict = {
+      'host' : None,
+      'port' : None,
+      'expnum' : None,
+      'filename': None,
+      'cmdargs': None,
+      'defaulttarget': None,
+      'defaultkeyname': None,
+      'currenttarget': None,
+      'currentkeyname': None,
+      'autosave': False,
+      'handleinfo': {},
+      'showparse': True,
+      'local_mode' : False,
     }
 
-  
 
   # Set up the tab completion environment (Added by Danny Y. Huang)
   if tabcompletion:
@@ -292,7 +326,14 @@ def command_loop(test_command_list):
   
   
 if __name__=='__main__':
-  seash_helper.update_time()
+
+  parse_arguments()
+
+  if LOCAL_MODE:
+    seash_helper.local_updatetime(10000)
+  else:
+    seash_helper.update_time()
+
   seash_modules.enable_modules_from_last_session(seash_dictionary.seashcommanddict)
   
   # For general usage, empty list is passed to prompt for user input
